@@ -1,0 +1,37 @@
+<input [(ngModel)]="selectedTimezone" type="text">
+<table>
+    <thead>
+      <tr>
+        <th>Time zone name</th>
+        <th>Timezone abbreviation and offset</th>
+        <th>Current local time</th>
+        <th>Local date</th>
+        <th>Daylight saving</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let timezone of timeZones">
+
+        <td>{{ timezone.name }}</td>
+        <td>{{ timezone.abbreviation }} (UTC{{ timezone.offset }})</td>
+        <td>{{ timezone.currentTime }}</td>
+        <td>{{ timezone.localDate }}</td>
+        <td>{{ timezone.daylightSaving }}</td>
+      </tr>
+    </tbody>
+  </table>
+  
+
+  <button (click)="addTimezone()">Add</button>
+  
+ 
+  <div class="modal">
+    <select [(ngModel)]="selectedTimezone">
+      <option value="Your Default Timezone">Your Default Timezone</option>
+      <option *ngFor="let tz of allTimezones" [value]="tz">{{ tz }}</option>
+    </select>
+    <button (click)="addTimezone()">Add</button>
+    <button (click)="cancelAdd()">Cancel</button>
+  </div>
+  
