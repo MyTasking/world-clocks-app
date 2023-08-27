@@ -1,7 +1,10 @@
+
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { WorldClocksService } from '../world-clocks.service'; 
+import { WorldClocksService } from '../world-clocks.service';
 import { TimezoneData } from './timezone-data';
 import * as momentTimezone from 'moment-timezone';
+import { MatDialog } from '@angular/material/dialog';
+import { AddTimezoneDialogComponent } from '../add-timezone-dialog/add-timezone-dialog.component';
 
 @Component({
   selector: 'app-world-clocks',
@@ -13,8 +16,10 @@ export class WorldClocksComponent implements OnInit, OnDestroy {
   selectedTimezone: string = '';
   allTimezones: string[] = [];
   private intervalId: any;
+  selectedTimezoneToAdd: string = '';
+  isAddTimezoneModalOpen: boolean = false;
 
-  constructor(private worldClocksService: WorldClocksService) {}
+  constructor(private worldClocksService: WorldClocksService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.worldClocksService.getTimezones().subscribe((timezones: string[]) => {
@@ -38,7 +43,6 @@ export class WorldClocksComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    
     clearInterval(this.intervalId);
   }
 
@@ -46,29 +50,28 @@ export class WorldClocksComponent implements OnInit, OnDestroy {
     for (let index = 0; index < this.allTimezones.length; index++) {
       try {
         const data = await this.worldClocksService.getTimezoneInfo(this.allTimezones[index]).toPromise();
-  
+
         this.timeZones[index].abbreviation = data.abbreviation;
         this.timeZones[index].offset = data.utc_offset;
-  
+
         if (data.datetime && typeof data.datetime === 'string') {
           const utcTime = momentTimezone(data.datetime).tz(this.allTimezones[index]);
           const formattedTime = utcTime.format('HH:mm:ss');
           this.timeZones[index].currentTime = formattedTime;
-  
+
           const formattedDate = utcTime.format('DD/MM/YYYY');
           this.timeZones[index].localDate = formattedDate;
-  
+
           if (data.dst_from && data.dst_until) {
             const dstFrom = momentTimezone(data.dst_from).tz(this.allTimezones[index]);
             const dstUntil = momentTimezone(data.dst_until).tz(this.allTimezones[index]);
-  
+
             const formattedDstFrom = dstFrom.format('DD-MM-YYYY');
             const formattedDstUntil = dstUntil.format('DD-MM-YYYY');
-  
+
             const dstInfo = `${formattedDstFrom} -> ${formattedDstUntil}`;
             this.timeZones[index].daylightSaving = dstInfo;
           } else {
-       
             this.timeZones[index].daylightSaving = 'no information';
           }
         } else {
@@ -84,12 +87,44 @@ export class WorldClocksComponent implements OnInit, OnDestroy {
       }
     }
   }
-  
-  addTimezone() {
 
+  addTimezone() {
+    if (this.selectedTimezoneToAdd) {
+      const newTimezone: TimezoneData = {
+        name: this.selectedTimezoneToAdd,
+        abbreviation: '',
+        offset: '',
+        currentTime: '',
+        localDate: '',
+        daylightSaving: '',
+      };
+
+      this.timeZones.push(newTimezone);
+
+      this.selectedTimezoneToAdd = '';
+      this.closeAddTimezoneModal();
+    }
   }
 
-  cancelAdd() {
-   
+  openAddTimezoneModal() {
+    this.isAddTimezoneModalOpen = true;
+  }
+
+  closeAddTimezoneModal() {
+    this.isAddTimezoneModalOpen = false;
+  }
+
+  openAddTimezoneDialog() {
+    const dialogRef = this.dialog.open(AddTimezoneDialogComponent, {
+      width: '300px',
+      data: { allTimezones: this.allTimezones, selectedTimezoneToAdd: this.selectedTimezoneToAdd },
+    });
+
+    dialogRef.afterClosed().subscribe((result: string) => {
+      if (result) {
+        this.selectedTimezoneToAdd = result;
+        this.addTimezone();
+      }
+    });
   }
 }

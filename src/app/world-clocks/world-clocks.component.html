@@ -1,37 +1,33 @@
-<input [(ngModel)]="selectedTimezone" type="text">
-<table>
-    <thead>
-      <tr>
-        <th>Time zone name</th>
-        <th>Timezone abbreviation and offset</th>
-        <th>Current local time in 24-hour format</th>
-        <th>Local date in day/month/year</th>
-        <th>Daylight saving</th>
-      </tr>
-    </thead>
+<input [(ngModel)]="selectedTimezoneToAdd" type="text">
+<button (click)="openAddTimezoneModal()">Add</button>
 
-    <tbody>
-      <tr *ngFor="let timezone of timeZones">
-
-        <td>{{ timezone.name }}</td>
-        <td>{{ timezone.abbreviation }} (UTC{{ timezone.offset }})</td>
-        <td>{{ timezone.currentTime }}</td>
-        <td>{{ timezone.localDate }}</td>
-        <td>{{ timezone.daylightSaving }}</td>
-      </tr>
-    </tbody>
-  </table>
-  
-
+<div class="modal" [ngClass]="{'show': isAddTimezoneModalOpen}">
+  <select [(ngModel)]="selectedTimezoneToAdd">
+    <option value="Your Default Timezone">Your Default Timezone</option>
+    <option *ngFor="let tz of allTimezones" [value]="tz">{{ tz }}</option>
+  </select>
   <button (click)="addTimezone()">Add</button>
-  
- 
-  <div class="modal">
-    <select [(ngModel)]="selectedTimezone">
-      <option value="Your Default Timezone">Your Default Timezone</option>
-      <option *ngFor="let tz of allTimezones" [value]="tz">{{ tz }}</option>
-    </select>
-    <button (click)="addTimezone()">Add</button>
-    <button (click)="cancelAdd()">Cancel</button>
-  </div>
-  
+  <button (click)="closeAddTimezoneModal()">Cancel</button>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Time zone name</th>
+      <th>Timezone abbreviation and offset</th>
+      <th>Current local time in 24-hour format</th>
+      <th>Local date in day/month/year</th>
+      <th>Daylight saving</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let timezone of timeZones">
+      <td>{{ timezone.name }}</td>
+      <td>{{ timezone.abbreviation }} (UTC{{ timezone.offset }})</td>
+      <td>{{ timezone.currentTime }}</td>
+      <td>{{ timezone.localDate }}</td>
+      <td>{{ timezone.daylightSaving }}</td>
+    </tr>
+  </tbody>
+</table>
+

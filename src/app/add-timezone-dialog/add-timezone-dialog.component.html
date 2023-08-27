@@ -1,0 +1,8 @@
+
+<h2>Choose your timezone</h2>
+<select [(ngModel)]="data.selectedTimezoneToAdd">
+  <option value="Your Default Timezone">Your Default Timezone</option>
+  <option *ngFor="let tz of data.allTimezones" [value]="tz">{{ tz }}</option>
+</select>
+<button (click)="onAddClick()">Add</button>
+<button (click)="onCancelClick()">Cancel</button>
