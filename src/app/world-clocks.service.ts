@@ -15,4 +15,10 @@ export class WorldClocksService {
     return this.http.get<string[]>(this.apiUrl);
   }
 
+
+  getTimezoneInfo(timezone: string): Observable<any> {
+    const timezoneUrl = `${this.apiUrl}/${timezone}`;
+    return this.http.get(timezoneUrl);
+  }
 }
+
