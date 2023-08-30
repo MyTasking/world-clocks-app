@@ -6,6 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectModule } from '@angular/material/select';
 import { HttpClientModule } from '@angular/common/http';
+import { AppRoutingModule } from './app-routing.module'; 
+
 
 import { WorldClocksComponent } from './world-clocks/world-clocks.component';
 import { AddTimezoneDialogComponent } from './add-timezone-dialog/add-timezone-dialog.component';
@@ -23,9 +25,9 @@ import { AddTimezoneDialogComponent } from './add-timezone-dialog/add-timezone-d
     MatButtonModule,
     MatDialogModule,
     MatSelectModule,
+    AppRoutingModule, 
   ],
   providers: [],
   bootstrap: [WorldClocksComponent],
-  
 })
 export class AppModule { }

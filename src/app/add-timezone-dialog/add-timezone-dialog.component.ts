@@ -7,6 +7,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   templateUrl: './add-timezone-dialog.component.html',
 })
 export class AddTimezoneDialogComponent {
+  isAddTimezoneModalOpen: boolean = false; // Добавьте это свойство
+
   constructor(
     public dialogRef: MatDialogRef<AddTimezoneDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { allTimezones: string[], selectedTimezoneToAdd: string }
@@ -17,7 +19,6 @@ export class AddTimezoneDialogComponent {
   }
 
   onCancelClick() {
-  
     this.dialogRef.close();
   }
 }
